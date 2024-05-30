@@ -11,8 +11,10 @@ def find_column_values(file_path):
 
         # Iterate over each row and collect values from columns A and B
         for row in csvreader:
-            column_a_values.add(row[0])
-            column_b_values.add(row[1])
+            a = row[0].replace(" ", "")
+            b = row[1].replace(" ", "")
+            column_a_values.add(a)
+            column_b_values.add(b)
 
     return (column_a_values, column_b_values)
 
