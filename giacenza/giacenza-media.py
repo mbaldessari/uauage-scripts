@@ -40,7 +40,7 @@ def get_daily_balance(csv_file):
         if day not in seen_days:
             seen_days.add(day)
             xchange = get_daily_eur_gbp(day)
-            euros = xchange * row["Running Balance"]
+            euros = row["Running Balance"] / xchange
             balance[day] = euros
         else:
             # If we seen this day we skip it (it was the first)
