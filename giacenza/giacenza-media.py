@@ -56,5 +56,5 @@ def get_giacenza_media(b):
     return sum(b.values()) / len(b)
 
 
-bal = get_daily_balance("~/statement_37543175_GBP_2024-01-01_2024-12-31.csv")
+bal = get_daily_balance("./statement_37543175_GBP_2025-01-01_2025-12-31.csv")
 print(f"Giacenza media in EUR: {get_giacenza_media(bal)}")
