@@ -1,11 +1,21 @@
 #!/usr/bin/python3
 
+import argparse
+import sys
+
 import pandas as pd
 
+EUROXREF_URL = "https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html"
+EUROXREF_FILE = "./eurofxref-hist.csv"
 
-# Time series to be downloaded from
-# https://www.ecb.europa.eu/stats/policy_and_exchange_rates/euro_reference_exchange_rates/html/index.en.html
-euroxref = pd.read_csv("./eurofxref-hist.csv", parse_dates=["Date"])
+euroxref = pd.read_csv(EUROXREF_FILE, parse_dates=["Date"])
+
+latest_date = euroxref["Date"].max()
+today = pd.Timestamp.today().normalize()
+if (today - latest_date).days > 3:
+    print(f"WARNING: {EUROXREF_FILE} latest data is from {latest_date.date()}, which is more than 3 days old.")
+    print(f"Download an updated file from:\n  {EUROXREF_URL}")
+    sys.exit(1)
 
 
 def get_daily_eur_gbp(day, currency="GBP"):
@@ -56,5 +66,9 @@ def get_giacenza_media(b):
     return sum(b.values()) / len(b)
 
 
-bal = get_daily_balance("./statement_37543175_GBP_2025-01-01_2025-12-31.csv")
+parser = argparse.ArgumentParser(description="Calculate giacenza media in EUR from a GBP bank statement CSV.")
+parser.add_argument("csv_file", help="Path to the bank statement CSV file")
+args = parser.parse_args()
+
+bal = get_daily_balance(args.csv_file)
 print(f"Giacenza media in EUR: {get_giacenza_media(bal)}")
